@@ -1,0 +1,77 @@
+/**
+ * Styles for input panel with responsive design
+ */
+
+.input-panel {
+  margin-bottom: 30px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-group label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.syllable-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.syllable-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.input-help {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.error-message {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+  color: #c33;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 600px) {
+  .input-panel {
+    margin-bottom: 20px;
+  }
+
+  .input-group label {
+    font-size: 16px;
+  }
+
+  .syllable-input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .input-help {
+    font-size: 12px;
+  }
+
+  .error-message {
+    font-size: 12px;
+    padding: 10px;
+  }
+}

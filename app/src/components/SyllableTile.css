@@ -1,0 +1,28 @@
+/**
+ * Styles for syllable tiles
+ * Width, height, and font-size are set dynamically via inline styles for responsiveness
+ */
+
+.syllable-tile {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, width 0.3s ease, height 0.3s ease, font-size 0.3s ease;
+  user-select: none;
+}
+
+.syllable-tile:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive adjustments for very small screens */
+@media (max-width: 400px) {
+  .syllable-tile {
+    border-radius: 6px;
+  }
+}
