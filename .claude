@@ -1,0 +1,33 @@
+# Byz Notation Webapp Project
+
+## Overview
+a browser-based educational application for **absolute beginner music students** using the **Byzantine Greek paralage (solfege) system**.
+
+## Tech Stack
+- Language: Typescript (if a backend language is needed, prefer Golang)
+- Key frameworks: React
+- Infrastructure: Local workstation for now - Linux/Mac compatible
+
+## Coding Standards
+- Follow eslint linting standards
+- All functions must include docstrings/comments
+- Error handling: Always include proper try-catch with context
+- Logging: Use structured logging with appropriate levels
+
+## Testing
+- Write unit tests for all new features
+- Minimum 80% code coverage
+- Integration tests for API endpoints
+
+## Project Structure
+- `/src` - Main application code
+- `/tests` - Test files
+- `/docs` - Documentation
+- `/config` - Configuration files
+
+## Specific Preferences
+- Use async/await for I/O operations
+- Prefer composition over inheritance
+- Always validate input at API boundaries
+- Include metrics/observability in new features
+
