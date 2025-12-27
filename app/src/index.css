@@ -7,7 +7,7 @@
  */
 @font-face {
   font-family: 'Neanes';
-  src: url('./assets/fonts/Neanes.otf') format('opentype');
+  src: url('/byz_notes/fonts/Neanes.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
