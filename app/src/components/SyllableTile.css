@@ -16,6 +16,7 @@
   transition: transform 0.2s ease, width 0.3s ease, height 0.3s ease, font-size 0.3s ease;
   user-select: none;
   padding: 4px;
+  overflow: visible;
 }
 
 .syllable-tile:hover {
@@ -33,6 +34,9 @@
   line-height: 1;
   color: #000;
   font-weight: normal;
+  background: transparent;
+  overflow: visible;
+  white-space: nowrap;
 }
 
 /**
