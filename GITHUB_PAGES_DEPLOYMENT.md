@@ -1,6 +1,6 @@
 # GitHub Pages Deployment Guide
 
-This guide explains how to deploy the Byzantine Paralage Teaching App to GitHub Pages.
+This guide explains how to deploy the Byzantine Paralage Practice App to GitHub Pages.
 
 ## Prerequisites
 

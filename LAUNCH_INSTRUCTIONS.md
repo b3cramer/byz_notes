@@ -1,4 +1,4 @@
-# Byzantine Paralage Teaching App - Launch Instructions
+# Byzantine Paralage Practice App - Launch Instructions
 
 ## Overview
 

@@ -1,6 +1,6 @@
 # Byzantine Paralage - AWS Infrastructure
 
-AWS CDK infrastructure for deploying the Byzantine Paralage Teaching App to AWS using S3 + CloudFront.
+AWS CDK infrastructure for deploying the Byzantine Paralage Practice App to AWS using S3 + CloudFront.
 
 ## Architecture
 

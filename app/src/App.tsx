@@ -1,5 +1,5 @@
 /**
- * Main application component for Byzantine Paralage Teaching App
+ * Main application component for Byzantine Paralage Practice App
  */
 
 import { useState } from 'react';
@@ -44,7 +44,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Byzantine Paralage Teaching App</h1>
+        <h1>Byzantine Paralage Practice App</h1>
         <p className="subtitle">
           Visual learning tool for Byzantine Greek solfege system
         </p>

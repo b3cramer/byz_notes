@@ -33,7 +33,7 @@ new ByzantineParalageStack(app, 'ByzantineParalageStack', {
   /**
    * Stack description
    */
-  description: 'Byzantine Paralage Teaching App - Static Site Hosting on AWS Lightsail',
+  description: 'Byzantine Paralage Practice App - Static Site Hosting on AWS Lightsail',
 
   /**
    * Tags for resource organization and cost tracking

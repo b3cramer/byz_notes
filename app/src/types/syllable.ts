@@ -1,5 +1,5 @@
 /**
- * Core types for the Byzantine Paralage teaching application
+ * Core types for the Byzantine Paralage Practice Application
  */
 
 /**

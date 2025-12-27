@@ -1,7 +1,7 @@
 {
   "name": "byzantine-paralage-infrastructure",
   "version": "1.0.0",
-  "description": "AWS CDK infrastructure for Byzantine Paralage Teaching App",
+  "description": "AWS CDK infrastructure for Byzantine Paralage Practice App",
   "main": "index.js",
   "scripts": {
     "build": "tsc",

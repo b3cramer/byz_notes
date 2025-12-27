@@ -134,7 +134,7 @@ export class ByzantineParalageStack extends cdk.Stack {
         },
       ],
       priceClass: cloudfront.PriceClass.PRICE_CLASS_100, // Use only North America and Europe
-      comment: 'Byzantine Paralage Teaching App CDN',
+      comment: 'Byzantine Paralage Practice App CDN',
     });
 
     /**
