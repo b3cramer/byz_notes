@@ -57,7 +57,7 @@ function App() {
 
       <footer className="app-footer">
         <p>
-          For absolute beginner music students learning Byzantine notation
+          A Forty Foot Music Project
         </p>
       </footer>
     </div>
