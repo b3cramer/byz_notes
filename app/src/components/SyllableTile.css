@@ -28,15 +28,16 @@
  */
 .syllable-tile .klasma {
   position: absolute;
-  top: 0;
+  top: -10%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-50%);
   line-height: 1;
   color: #000;
   font-weight: normal;
   background: transparent;
   overflow: visible;
   white-space: nowrap;
+  z-index: 10;
 }
 
 /**
