@@ -1,0 +1,50 @@
+# Dependencies
+**/node_modules
+**/npm-debug.log
+**/yarn-error.log
+**/yarn.lock
+# Keep app/package-lock.json for Docker builds
+!app/package-lock.json
+
+# Build artifacts
+**/dist
+**/build
+**/.next
+**/.nuxt
+
+# Development files
+**/.git
+**/.gitignore
+**/.vscode
+**/.idea
+**/*.log
+**/.DS_Store
+
+# CDK
+infrastructure/cdk.out
+infrastructure/dist
+infrastructure/*.d.ts
+infrastructure/*.js
+
+# Environment
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Documentation
+**/*.md
+!app/README.md
+
+# Test files
+**/__tests__
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Misc
+.git
+.gitignore
+README.md
+LICENSE
+CHANGELOG.md

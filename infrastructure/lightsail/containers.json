@@ -1,0 +1,11 @@
+{
+  "app": {
+    "image": ":app.latest",
+    "ports": {
+      "80": "HTTP"
+    },
+    "environment": {
+      "NODE_ENV": "production"
+    }
+  }
+}
