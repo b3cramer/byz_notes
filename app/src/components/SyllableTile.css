@@ -28,7 +28,7 @@
  */
 .syllable-tile .klasma {
   position: absolute;
-  top: 0;
+  top: -50%;
   left: 50%;
   transform: translateX(-50%);
   line-height: 1;
@@ -37,6 +37,7 @@
   background: transparent;
   overflow: visible;
   white-space: nowrap;
+  z-index: 10;
 }
 
 /**
