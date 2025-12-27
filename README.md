@@ -1,4 +1,4 @@
-# Byzantine Paralage Teaching App
+# Byzantine Paralage Practice App
 
 A browser-based educational application for absolute beginner music students learning the Byzantine Greek paralage (solfege) system.
 
