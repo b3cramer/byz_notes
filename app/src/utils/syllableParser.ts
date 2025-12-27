@@ -11,6 +11,7 @@ import type { Syllable, SyllablePosition } from '../types/syllable';
  * 1. Space-separated full syllable names (e.g., "Ni Pa Bou Ga")
  * 2. Single-character shortcuts without spaces (e.g., "asdf")
  * 3. Mixed mode with spaces (e.g., "a s d f" or "Ni s d Ga")
+ * 4. Klasma modifier: "2" immediately after a character adds klasma (e.g., "a2" for Ni with klasma)
  *
  * @param input - Raw text input from user
  * @returns Array of valid syllables and array of invalid tokens
@@ -44,18 +45,35 @@ export function parseInput(input: string): {
         }
       });
     } else {
-      // Single-character mode: process each character individually
+      // Single-character mode: process each character individually with klasma support
       const chars = trimmedInput.toLowerCase().split('');
+      let i = 0;
 
-      chars.forEach((char) => {
+      while (i < chars.length) {
+        const char = chars[i];
         const syllable = SYLLABLE_MAP[char];
 
         if (syllable) {
-          valid.push(syllable);
+          // Check if next character is "2" for klasma
+          const hasKlasma = i + 1 < chars.length && chars[i + 1] === '2';
+
+          if (hasKlasma) {
+            // Create a copy of the syllable with klasma flag
+            valid.push({ ...syllable, hasKlasma: true });
+            i += 2; // Skip both the character and the "2"
+          } else {
+            valid.push(syllable);
+            i += 1;
+          }
+        } else if (char === '2') {
+          // "2" by itself without a preceding syllable is invalid
+          invalid.push(char);
+          i += 1;
         } else {
           invalid.push(char);
+          i += 1;
         }
-      });
+      }
     }
 
     return { valid, invalid };

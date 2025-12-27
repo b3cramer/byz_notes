@@ -10,8 +10,10 @@ export interface Syllable {
   name: string;
   /** The color to display for this syllable */
   color: string;
-  /** The position in the scale (0-7) */
+  /** The position in the scale (-3 to 8) */
   scaleIndex: number;
+  /** Whether this syllable has a klasma (rhythm marker) */
+  hasKlasma?: boolean;
 }
 
 /**
@@ -31,9 +33,14 @@ export interface SyllablePosition {
  * Maps syllable names and keyboard shortcuts to their metadata
  *
  * Color pattern (repeating 4-color cycle):
- * - Red, Orange, Yellow, Green, Red, Orange, Yellow, Green
+ * - Red, Orange, Yellow, Green, Red, Orange, Yellow, Green, Red, Orange
  *
  * Keyboard shortcuts:
+ * Low octave:
+ * - z = Low Dhi (Red)
+ * - x = Low Ke (Orange)
+ * - c = Low Zo (Yellow)
+ * Main octave:
  * - a = Ni (Red)
  * - s = Pa (Orange)
  * - d = Vou (Yellow)
@@ -42,9 +49,15 @@ export interface SyllablePosition {
  * - w = Ke (Orange)
  * - e = Zo (Yellow)
  * - r = Ni` (Green)
+ * - t = Pa` (Orange)
  */
 export const SYLLABLE_MAP: Record<string, Syllable> = {
-  // Full syllable names
+  // Full syllable names - Low octave
+  'low zo': { name: 'Low Zo', color: '#ffffba', scaleIndex: -1 }, // Pastel Yellow
+  'low ke': { name: 'Low Ke', color: '#ffcc99', scaleIndex: -2 }, // Pastel Orange
+  'low dhi': { name: 'Low Dhi', color: '#ffb3ba', scaleIndex: -3 }, // Pastel Red
+
+  // Full syllable names - Main octave
   ni: { name: 'Ni', color: '#ffb3ba', scaleIndex: 0 },    // Pastel Red
   pa: { name: 'Pa', color: '#ffcc99', scaleIndex: 1 },    // Pastel Orange
   bou: { name: 'Bou', color: '#ffffba', scaleIndex: 2 },  // Pastel Yellow
@@ -54,8 +67,14 @@ export const SYLLABLE_MAP: Record<string, Syllable> = {
   ke: { name: 'Ke', color: '#ffcc99', scaleIndex: 5 },    // Pastel Orange
   zo: { name: 'Zo', color: '#ffffba', scaleIndex: 6 },    // Pastel Yellow
   'ni`': { name: 'Ni`', color: '#baffc9', scaleIndex: 7 }, // Pastel Green
+  'pa`': { name: 'Pa`', color: '#ffb3ba', scaleIndex: 8 }, // Pastel Red
 
-  // Single-character keyboard shortcuts
+  // Single-character keyboard shortcuts - Low octave
+  c: { name: 'Low Zo', color: '#ffffba', scaleIndex: -1 }, // Pastel Yellow
+  x: { name: 'Low Ke', color: '#ffcc99', scaleIndex: -2 }, // Pastel Orange
+  z: { name: 'Low Dhi', color: '#ffb3ba', scaleIndex: -3 }, // Pastel Red
+
+  // Single-character keyboard shortcuts - Main octave
   a: { name: 'Ni', color: '#ffb3ba', scaleIndex: 0 },     // Pastel Red
   s: { name: 'Pa', color: '#ffcc99', scaleIndex: 1 },     // Pastel Orange
   d: { name: 'Bou', color: '#ffffba', scaleIndex: 2 },    // Pastel Yellow
@@ -64,9 +83,16 @@ export const SYLLABLE_MAP: Record<string, Syllable> = {
   w: { name: 'Ke', color: '#ffcc99', scaleIndex: 5 },     // Pastel Orange
   e: { name: 'Zo', color: '#ffffba', scaleIndex: 6 },     // Pastel Yellow
   r: { name: 'Ni`', color: '#baffc9', scaleIndex: 7 },    // Pastel Green
+  t: { name: 'Pa`', color: '#ffb3ba', scaleIndex: 8 },    // Pastel Red
 };
 
 /**
  * Ordered array of syllable names in the scale (ascending)
  */
-export const SCALE_ORDER = ['ni', 'pa', 'bou', 'ga', 'dhi', 'ke', 'zo', 'ni`'];
+export const SCALE_ORDER = ['low dhi', 'low ke', 'low zo', 'ni', 'pa', 'bou', 'ga', 'dhi', 'ke', 'zo', 'ni`', 'pa`'];
+
+/**
+ * Klasma character - Byzantine rhythm marker
+ * Neanes font maps this to U+E0D0 in the Private Use Area
+ */
+export const KLASMA_CHAR = '\uE0D0';

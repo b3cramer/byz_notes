@@ -94,3 +94,30 @@ app/
 ## Browser Support
 
 Works in all modern browsers (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
+
+## Deployment
+
+### GitHub Pages (Recommended - FREE)
+
+The easiest way to deploy this app is using GitHub Pages:
+
+1. **Enable GitHub Pages** in your repository settings
+2. **Push to main branch** - automatic deployment via GitHub Actions
+3. **Access your app** at: `https://yourusername.github.io/byz_notes/`
+
+See [GITHUB_PAGES_DEPLOYMENT.md](./GITHUB_PAGES_DEPLOYMENT.md) for detailed instructions.
+
+### AWS Deployment (Alternative)
+
+If you need AWS hosting:
+
+- **S3 + CloudFront** (Recommended): $1-5/month - See [infrastructure/README.md](./infrastructure/README.md)
+- **Lightsail Containers**: $7-10/month - See [infrastructure/lightsail/README.md](./infrastructure/lightsail/README.md)
+
+**Comparison:**
+
+| Method           | Cost      | Setup Time | Best For                      |
+| ---------------- | --------- | ---------- | ----------------------------- |
+| GitHub Pages     | **FREE**  | 5 min      | Public projects, education    |
+| S3 + CloudFront  | $1-5/mo   | 15 min     | Production, custom domain     |
+| Lightsail        | $7-10/mo  | 20 min     | Container preference          |

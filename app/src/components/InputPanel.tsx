@@ -68,7 +68,7 @@ export const InputPanel = ({ onSubmit, invalidTokens }: InputPanelProps) => {
             autoComplete="off"
           />
           <div className="input-help">
-            Quick keys: a=Ni, s=Pa, d=Vou, f=Ga, q=Dhi, w=Ke, e=Zo, r=Ni` | Or use full names with spaces (max 15)
+            Low: z=Low Dhi, x=Low Ke, c=Low Zo | Main: a=Ni, s=Pa, d=Vou, f=Ga, q=Dhi, w=Ke, e=Zo, r=Ni`, t=Pa` | Add "2" after letter for klasma (e.g., a2) | Max 15
           </div>
         </div>
       </form>

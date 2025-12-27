@@ -2,6 +2,17 @@
  * Global styles for Byzantine Paralage Teaching App
  */
 
+/**
+ * Neanes font for Byzantine notation and rhythm characters
+ */
+@font-face {
+  font-family: 'Neanes';
+  src: url('./assets/fonts/Neanes.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.5;
@@ -42,4 +53,15 @@ h1, h2, h3, h4, h5, h6 {
 p {
   margin: 0;
   padding: 0;
+}
+
+/**
+ * Neanes font utility class for Byzantine rhythm characters
+ * Use this class on any element that needs to display Neanes font characters
+ */
+.neanes-font {
+  font-family: 'Neanes', sans-serif;
+  font-feature-settings: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
