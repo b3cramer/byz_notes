@@ -5,6 +5,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { SyllablePosition } from '../types/syllable';
 import { SyllableTile } from './SyllableTile';
+import { exportToPDF } from '../utils/pdfExport';
 import './MelodicDisplay.css';
 
 interface MelodicDisplayProps {
@@ -23,6 +24,24 @@ export const MelodicDisplay = ({ positions }: MelodicDisplayProps) => {
   const [containerHeight, setContainerHeight] = useState(500);
   const [tileSize, setTileSize] = useState(80);
   const [spacing, setSpacing] = useState({ horizontal: 100, vertical: 60 });
+  const [isExporting, setIsExporting] = useState(false);
+
+  /**
+   * Handle PDF export
+   */
+  const handleExportPDF = async () => {
+    if (!containerRef.current || positions.length === 0) return;
+
+    setIsExporting(true);
+    try {
+      await exportToPDF(containerRef.current, 'byzantine-melody.pdf');
+    } catch (error) {
+      console.error('Failed to export PDF:', error);
+      alert('Failed to export PDF. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   /**
    * Update container dimensions and calculate responsive tile size
@@ -110,20 +129,32 @@ export const MelodicDisplay = ({ positions }: MelodicDisplayProps) => {
   }, [positions, containerHeight, spacing]);
 
   return (
-    <div className="melodic-display" ref={containerRef} style={{ height: `${containerHeight}px` }}>
-      {normalizedPositions.length === 0 ? (
-        <div className="empty-state">Enter syllables above to see the melodic contour</div>
-      ) : (
-        normalizedPositions.map((pos, index) => (
-          <SyllableTile
-            key={index}
-            syllable={pos.syllable}
-            x={pos.x}
-            y={pos.y}
-            size={tileSize}
-          />
-        ))
+    <div className="melodic-display-container">
+      {normalizedPositions.length > 0 && (
+        <button
+          className="export-pdf-button"
+          onClick={handleExportPDF}
+          disabled={isExporting}
+          aria-label="Export to PDF"
+        >
+          {isExporting ? 'Exporting...' : 'Export PDF'}
+        </button>
       )}
+      <div className="melodic-display" ref={containerRef} style={{ height: `${containerHeight}px` }}>
+        {normalizedPositions.length === 0 ? (
+          <div className="empty-state">Enter syllables above to see the melodic contour</div>
+        ) : (
+          normalizedPositions.map((pos, index) => (
+            <SyllableTile
+              key={index}
+              syllable={pos.syllable}
+              x={pos.x}
+              y={pos.y}
+              size={tileSize}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 };
