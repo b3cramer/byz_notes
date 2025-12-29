@@ -24,14 +24,15 @@ export const exportToSVG = (
     throw new Error('No syllables to export');
   }
 
-  // Calculate SVG dimensions
-  const padding = { left: 50, right: 50, top: 40, bottom: 20 };
+  // Calculate SVG dimensions based on actual tile positions
+  const padding = { left: 50, right: 50, top: 80, bottom: 40 }; // Extra top padding for Klasma
+  const minX = Math.min(...positions.map(p => p.x));
   const maxX = Math.max(...positions.map(p => p.x));
-  const maxY = Math.max(...positions.map(p => p.y));
   const minY = Math.min(...positions.map(p => p.y));
+  const maxY = Math.max(...positions.map(p => p.y));
 
-  const width = maxX + tileSize + padding.left + padding.right;
-  const height = maxY - minY + tileSize + padding.top + padding.bottom + 100;
+  const width = maxX - minX + tileSize + padding.left + padding.right;
+  const height = maxY - minY + tileSize + padding.top + padding.bottom;
 
   // Create SVG element
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -47,12 +48,15 @@ export const exportToSVG = (
   background.setAttribute('fill', '#fafafa');
   svg.appendChild(background);
 
-  // Define font for Klasma characters
+  // Define fonts and styles
   const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
   style.textContent = `
     @font-face {
       font-family: 'Neanes';
       src: url('/byz_notes/fonts/Neanes.otf') format('opentype');
+    }
+    .syllable-text {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
     .neanes-font {
       font-family: 'Neanes', sans-serif;
@@ -63,8 +67,9 @@ export const exportToSVG = (
   // Add tiles
   positions.forEach((pos) => {
     const { syllable, x, y } = pos;
-    const tileX = x + padding.left;
-    const tileY = y;
+    // Normalize positions to start from padding offset
+    const tileX = x - minX + padding.left;
+    const tileY = y - minY + padding.top;
 
     // Create tile group
     const tileGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -92,6 +97,7 @@ export const exportToSVG = (
     text.setAttribute('font-size', `${fontSize}px`);
     text.setAttribute('font-weight', 'bold');
     text.setAttribute('fill', '#333');
+    text.setAttribute('class', 'syllable-text');
     text.textContent = syllable.name;
     tileGroup.appendChild(text);
 
@@ -100,7 +106,8 @@ export const exportToSVG = (
       const klasmaFontSize = Math.round(tileSize * 0.8);
       const klasmaText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       klasmaText.setAttribute('x', (tileX + tileSize / 2).toString());
-      klasmaText.setAttribute('y', (tileY - tileSize * 0.5).toString());
+      // Position Klasma at top: -50% of tile size, matching the CSS
+      klasmaText.setAttribute('y', (tileY - tileSize * 0.5 + klasmaFontSize * 0.5).toString());
       klasmaText.setAttribute('text-anchor', 'middle');
       klasmaText.setAttribute('dominant-baseline', 'middle');
       klasmaText.setAttribute('font-size', `${klasmaFontSize}px`);
