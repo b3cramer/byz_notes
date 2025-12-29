@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { SyllablePosition } from '../types/syllable';
 import { SyllableTile } from './SyllableTile';
 import { exportToPDF } from '../utils/pdfExport';
+import { exportToSVG } from '../utils/svgExport';
 import './MelodicDisplay.css';
 
 interface MelodicDisplayProps {
@@ -40,6 +41,20 @@ export const MelodicDisplay = ({ positions }: MelodicDisplayProps) => {
       alert('Failed to export PDF. Please try again.');
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  /**
+   * Handle SVG export
+   */
+  const handleExportSVG = () => {
+    if (normalizedPositions.length === 0) return;
+
+    try {
+      exportToSVG(normalizedPositions, tileSize, spacing, containerHeight, 'byzantine-melody.svg');
+    } catch (error) {
+      console.error('Failed to export SVG:', error);
+      alert('Failed to export SVG. Please try again.');
     }
   };
 
@@ -131,14 +146,23 @@ export const MelodicDisplay = ({ positions }: MelodicDisplayProps) => {
   return (
     <div className="melodic-display-container">
       {normalizedPositions.length > 0 && (
-        <button
-          className="export-pdf-button"
-          onClick={handleExportPDF}
-          disabled={isExporting}
-          aria-label="Export to PDF"
-        >
-          {isExporting ? 'Exporting...' : 'Export PDF'}
-        </button>
+        <div className="export-buttons">
+          <button
+            className="export-pdf-button"
+            onClick={handleExportPDF}
+            disabled={isExporting}
+            aria-label="Export to PDF"
+          >
+            {isExporting ? 'Exporting...' : 'Export PDF'}
+          </button>
+          <button
+            className="export-svg-button"
+            onClick={handleExportSVG}
+            aria-label="Export to SVG"
+          >
+            Export SVG
+          </button>
+        </div>
       )}
       <div className="melodic-display" ref={containerRef} style={{ height: `${containerHeight}px` }}>
         {normalizedPositions.length === 0 ? (
