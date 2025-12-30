@@ -40,26 +40,53 @@ export function parseInput(input: string): {
     const isValidFullName = baseInput.toLowerCase() in SYLLABLE_MAP && baseInput.length > 1;
 
     if (hasSpaces) {
-      // Space-separated mode: split by whitespace
+      // Space-separated mode: handle multi-word syllable names like "Low Zo"
       const tokens = trimmedInput.split(/\s+/).filter((token) => token.length > 0);
+      let i = 0;
 
-      tokens.forEach((token) => {
-        // Check if token ends with "2" for klasma modifier
-        const hasKlasma = token.endsWith('2');
-        const baseToken = hasKlasma ? token.slice(0, -1) : token;
-        const normalized = baseToken.toLowerCase();
-        const syllable = SYLLABLE_MAP[normalized];
+      while (i < tokens.length) {
+        let matched = false;
 
-        if (syllable) {
-          if (hasKlasma) {
-            valid.push({ ...syllable, hasKlasma: true });
-          } else {
-            valid.push(syllable);
+        // Try to match two-word syllable names first (e.g., "Low Zo", "Low Zo2")
+        if (i + 1 < tokens.length) {
+          const secondToken = tokens[i + 1];
+          const hasKlasma = secondToken.endsWith('2');
+          const cleanSecondToken = hasKlasma ? secondToken.slice(0, -1) : secondToken;
+          const twoWordToken = `${tokens[i]} ${cleanSecondToken}`;
+          const normalized = twoWordToken.toLowerCase();
+          const syllable = SYLLABLE_MAP[normalized];
+
+          if (syllable) {
+            if (hasKlasma) {
+              valid.push({ ...syllable, hasKlasma: true });
+            } else {
+              valid.push(syllable);
+            }
+            i += 2; // Skip both tokens
+            matched = true;
           }
-        } else {
-          invalid.push(token);
         }
-      });
+
+        // If no two-word match, try single token
+        if (!matched) {
+          const token = tokens[i];
+          const hasKlasma = token.endsWith('2');
+          const baseToken = hasKlasma ? token.slice(0, -1) : token;
+          const normalized = baseToken.toLowerCase();
+          const syllable = SYLLABLE_MAP[normalized];
+
+          if (syllable) {
+            if (hasKlasma) {
+              valid.push({ ...syllable, hasKlasma: true });
+            } else {
+              valid.push(syllable);
+            }
+          } else {
+            invalid.push(token);
+          }
+          i += 1;
+        }
+      }
     } else if (hasUpperCase || isValidFullName) {
       // Has uppercase or is a valid full syllable name - treat as single word
       const hasKlasma = trimmedInput.endsWith('2');
