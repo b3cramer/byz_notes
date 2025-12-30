@@ -35,11 +35,18 @@ export function parseInput(input: string): {
       const tokens = trimmedInput.split(/\s+/).filter((token) => token.length > 0);
 
       tokens.forEach((token) => {
-        const normalized = token.toLowerCase();
+        // Check if token ends with "2" for klasma modifier
+        const hasKlasma = token.endsWith('2');
+        const baseToken = hasKlasma ? token.slice(0, -1) : token;
+        const normalized = baseToken.toLowerCase();
         const syllable = SYLLABLE_MAP[normalized];
 
         if (syllable) {
-          valid.push(syllable);
+          if (hasKlasma) {
+            valid.push({ ...syllable, hasKlasma: true });
+          } else {
+            valid.push(syllable);
+          }
         } else {
           invalid.push(token);
         }
