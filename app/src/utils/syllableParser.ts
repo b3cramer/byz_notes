@@ -29,8 +29,17 @@ export function parseInput(input: string): {
     const valid: Syllable[] = [];
     const invalid: string[] = [];
 
-    // Check if input contains spaces (space-separated mode)
-    if (trimmedInput.includes(' ')) {
+    // Determine parsing mode:
+    // Word mode if: has spaces OR has uppercase letters OR is a valid full syllable name
+    const hasSpaces = trimmedInput.includes(' ');
+    const hasUpperCase = /[A-Z]/.test(trimmedInput);
+
+    // Check if the input (minus optional "2") is a valid syllable name
+    const potentialKlasma = trimmedInput.endsWith('2');
+    const baseInput = potentialKlasma ? trimmedInput.slice(0, -1) : trimmedInput;
+    const isValidFullName = baseInput.toLowerCase() in SYLLABLE_MAP && baseInput.length > 1;
+
+    if (hasSpaces) {
       // Space-separated mode: split by whitespace
       const tokens = trimmedInput.split(/\s+/).filter((token) => token.length > 0);
 
@@ -51,6 +60,22 @@ export function parseInput(input: string): {
           invalid.push(token);
         }
       });
+    } else if (hasUpperCase || isValidFullName) {
+      // Has uppercase or is a valid full syllable name - treat as single word
+      const hasKlasma = trimmedInput.endsWith('2');
+      const baseToken = hasKlasma ? trimmedInput.slice(0, -1) : trimmedInput;
+      const normalized = baseToken.toLowerCase();
+      const syllable = SYLLABLE_MAP[normalized];
+
+      if (syllable) {
+        if (hasKlasma) {
+          valid.push({ ...syllable, hasKlasma: true });
+        } else {
+          valid.push(syllable);
+        }
+      } else {
+        invalid.push(trimmedInput);
+      }
     } else {
       // Single-character mode: process each character individually with klasma support
       const chars = trimmedInput.toLowerCase().split('');
