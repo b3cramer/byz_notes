@@ -24,7 +24,7 @@ RUN npm run build
 #####################################################################
 # Stage 2: Serve with nginx
 #####################################################################
-FROM nginx:alpine
+FROM nginx:1.29.4-alpine3.23
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
