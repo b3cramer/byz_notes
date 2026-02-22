@@ -37,7 +37,8 @@ export function parseInput(input: string): {
     // Check if the input (minus optional "2") is a valid syllable name
     const potentialKlasma = trimmedInput.endsWith('2');
     const baseInput = potentialKlasma ? trimmedInput.slice(0, -1) : trimmedInput;
-    const isValidFullName = baseInput.toLowerCase() in SYLLABLE_MAP && baseInput.length > 1;
+    const normalizedBase = baseInput.toLowerCase();
+    const isValidFullName = (SYLLABLE_MAP[normalizedBase] !== undefined) && baseInput.length > 1;
 
     if (hasSpaces) {
       // Space-separated mode: handle multi-word syllable names like "Low Zo"

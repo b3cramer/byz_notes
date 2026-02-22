@@ -26,7 +26,7 @@ export const InputPanel = ({ onSubmit, invalidTokens }: InputPanelProps) => {
    */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
-    const MAX_SYLLABLES = 15;
+    const MAX_SYLLABLES = 24;
 
     // Check syllable count based on input mode
     let syllableCount = 0;
