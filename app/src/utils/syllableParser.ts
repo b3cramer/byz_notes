@@ -3,7 +3,23 @@
  */
 
 import { SYLLABLE_MAP } from '../types/syllable';
-import type { Syllable, SyllablePosition } from '../types/syllable';
+import type { Scale, Syllable, SyllablePosition } from '../types/syllable';
+
+/** Rhythm marker suffixes: "1" = gorgon, "2" = klasma */
+const MARKERS: Record<string, Partial<Syllable>> = {
+  '1': { hasGorgon: true },
+  '2': { hasKlasma: true },
+};
+
+/**
+ * Splits a trailing rhythm marker off a token
+ * @param token - Token that may end in a marker (e.g., "Ni2")
+ * @returns Token without the marker, and the syllable flags the marker sets
+ */
+function splitMarker(token: string): { base: string; marks: Partial<Syllable> } {
+  const marks = MARKERS[token.slice(-1)];
+  return marks ? { base: token.slice(0, -1), marks } : { base: token, marks: {} };
+}
 
 /**
  * Parses user input string into an array of syllables
@@ -11,7 +27,7 @@ import type { Syllable, SyllablePosition } from '../types/syllable';
  * 1. Space-separated full syllable names (e.g., "Ni Pa Bou Ga")
  * 2. Single-character shortcuts without spaces (e.g., "asdf")
  * 3. Mixed mode with spaces (e.g., "a s d f" or "Ni s d Ga")
- * 4. Klasma modifier: "2" immediately after a character adds klasma (e.g., "a2" for Ni with klasma)
+ * 4. Rhythm markers immediately after a character: "1" adds gorgon, "2" adds klasma (e.g., "a2" for Ni with klasma)
  *
  * @param input - Raw text input from user
  * @returns Array of valid syllables and array of invalid tokens
@@ -34,9 +50,8 @@ export function parseInput(input: string): {
     const hasSpaces = trimmedInput.includes(' ');
     const hasUpperCase = /[A-Z]/.test(trimmedInput);
 
-    // Check if the input (minus optional "2") is a valid syllable name
-    const potentialKlasma = trimmedInput.endsWith('2');
-    const baseInput = potentialKlasma ? trimmedInput.slice(0, -1) : trimmedInput;
+    // Check if the input (minus optional marker) is a valid syllable name
+    const { base: baseInput } = splitMarker(trimmedInput);
     const normalizedBase = baseInput.toLowerCase();
     const isValidFullName = (SYLLABLE_MAP[normalizedBase] !== undefined) && baseInput.length > 1;
 
@@ -50,19 +65,13 @@ export function parseInput(input: string): {
 
         // Try to match two-word syllable names first (e.g., "Low Zo", "Low Zo2")
         if (i + 1 < tokens.length) {
-          const secondToken = tokens[i + 1];
-          const hasKlasma = secondToken.endsWith('2');
-          const cleanSecondToken = hasKlasma ? secondToken.slice(0, -1) : secondToken;
+          const { base: cleanSecondToken, marks } = splitMarker(tokens[i + 1]);
           const twoWordToken = `${tokens[i]} ${cleanSecondToken}`;
           const normalized = twoWordToken.toLowerCase();
           const syllable = SYLLABLE_MAP[normalized];
 
           if (syllable) {
-            if (hasKlasma) {
-              valid.push({ ...syllable, hasKlasma: true });
-            } else {
-              valid.push(syllable);
-            }
+            valid.push({ ...syllable, ...marks });
             i += 2; // Skip both tokens
             matched = true;
           }
@@ -71,17 +80,12 @@ export function parseInput(input: string): {
         // If no two-word match, try single token
         if (!matched) {
           const token = tokens[i];
-          const hasKlasma = token.endsWith('2');
-          const baseToken = hasKlasma ? token.slice(0, -1) : token;
+          const { base: baseToken, marks } = splitMarker(token);
           const normalized = baseToken.toLowerCase();
           const syllable = SYLLABLE_MAP[normalized];
 
           if (syllable) {
-            if (hasKlasma) {
-              valid.push({ ...syllable, hasKlasma: true });
-            } else {
-              valid.push(syllable);
-            }
+            valid.push({ ...syllable, ...marks });
           } else {
             invalid.push(token);
           }
@@ -90,22 +94,17 @@ export function parseInput(input: string): {
       }
     } else if (hasUpperCase || isValidFullName) {
       // Has uppercase or is a valid full syllable name - treat as single word
-      const hasKlasma = trimmedInput.endsWith('2');
-      const baseToken = hasKlasma ? trimmedInput.slice(0, -1) : trimmedInput;
+      const { base: baseToken, marks } = splitMarker(trimmedInput);
       const normalized = baseToken.toLowerCase();
       const syllable = SYLLABLE_MAP[normalized];
 
       if (syllable) {
-        if (hasKlasma) {
-          valid.push({ ...syllable, hasKlasma: true });
-        } else {
-          valid.push(syllable);
-        }
+        valid.push({ ...syllable, ...marks });
       } else {
         invalid.push(trimmedInput);
       }
     } else {
-      // Single-character mode: process each character individually with klasma support
+      // Single-character mode: process each character individually with rhythm marker support
       const chars = trimmedInput.toLowerCase().split('');
       let i = 0;
 
@@ -114,19 +113,19 @@ export function parseInput(input: string): {
         const syllable = SYLLABLE_MAP[char];
 
         if (syllable) {
-          // Check if next character is "2" for klasma
-          const hasKlasma = i + 1 < chars.length && chars[i + 1] === '2';
+          // Check if next character is a rhythm marker ("1" gorgon, "2" klasma)
+          const marks = i + 1 < chars.length ? MARKERS[chars[i + 1]] : undefined;
 
-          if (hasKlasma) {
-            // Create a copy of the syllable with klasma flag
-            valid.push({ ...syllable, hasKlasma: true });
-            i += 2; // Skip both the character and the "2"
+          if (marks) {
+            // Create a copy of the syllable with the marker flag
+            valid.push({ ...syllable, ...marks });
+            i += 2; // Skip both the character and the marker
           } else {
             valid.push(syllable);
             i += 1;
           }
-        } else if (char === '2') {
-          // "2" by itself without a preceding syllable is invalid
+        } else if (MARKERS[char]) {
+          // A marker by itself without a preceding syllable is invalid
           invalid.push(char);
           i += 1;
         } else {
@@ -141,6 +140,20 @@ export function parseInput(input: string): {
     console.error('Error parsing input:', error);
     return { valid: [], invalid: [] };
   }
+}
+
+/**
+ * Applies scale-specific markings to parsed syllables
+ * Enharmonic: every Zo (including Low Zo) gets the Agem
+ * @param syllables - Parsed syllables
+ * @param scale - Selected scale
+ * @returns Syllables with scale markings applied
+ */
+export function applyScale(syllables: Syllable[], scale: Scale): Syllable[] {
+  if (scale !== 'enharmonic') return syllables;
+  return syllables.map((s) =>
+    s.name === 'Zo' || s.name === 'Low Zo' ? { ...s, hasAgem: true } : s
+  );
 }
 
 /**
