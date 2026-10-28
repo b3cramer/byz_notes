@@ -2,44 +2,46 @@
  * Main application component for Byzantine Paralage Practice App
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { InputPanel } from './components/InputPanel';
 import { MelodicDisplay } from './components/MelodicDisplay';
-import { parseInput, calculatePositions } from './utils/syllableParser';
-import type { SyllablePosition } from './types/syllable';
+import { parseInput, calculatePositions, applyScale } from './utils/syllableParser';
+import type { Scale, SyllablePosition } from './types/syllable';
 import './App.css';
+
+/** Scale buttons in display order; chromatic scales are not implemented yet */
+const SCALES: { id: Scale; label: string; enabled: boolean }[] = [
+  { id: 'diatonic', label: 'Diatonic', enabled: true },
+  { id: 'soft-chromatic', label: 'Soft Chromatic', enabled: false },
+  { id: 'hard-chromatic', label: 'Hard Chromatic', enabled: false },
+  { id: 'enharmonic', label: 'Enharmonic', enabled: true },
+];
 
 /**
  * Root application component
- * Manages state for syllable input and melodic visualization
+ * Manages state for syllable input, selected scale, and melodic visualization
  * @returns Rendered application
  */
 function App() {
-  const [positions, setPositions] = useState<SyllablePosition[]>([]);
-  const [invalidTokens, setInvalidTokens] = useState<string[]>([]);
+  const [input, setInput] = useState('');
+  const [scale, setScale] = useState<Scale>('diatonic');
 
   /**
-   * Handles user input submission
-   * Parses input, validates syllables, and calculates positions for visualization
-   * @param input - Raw user input string
+   * Parses input, validates syllables, applies the scale, and calculates positions
+   * Recomputes when either the input or the scale changes
    */
-  const handleInputSubmit = (input: string) => {
+  const { positions, invalidTokens } = useMemo((): {
+    positions: SyllablePosition[];
+    invalidTokens: string[];
+  } => {
     try {
       const { valid, invalid } = parseInput(input);
-      setInvalidTokens(invalid);
-
-      if (valid.length > 0) {
-        const calculatedPositions = calculatePositions(valid);
-        setPositions(calculatedPositions);
-      } else {
-        setPositions([]);
-      }
+      return { positions: calculatePositions(applyScale(valid, scale)), invalidTokens: invalid };
     } catch (error) {
       console.error('Error processing input:', error);
-      setPositions([]);
-      setInvalidTokens([]);
+      return { positions: [], invalidTokens: [] };
     }
-  };
+  }, [input, scale]);
 
   return (
     <div className="app">
@@ -51,7 +53,23 @@ function App() {
       </header>
 
       <main className="app-main">
-        <InputPanel onSubmit={handleInputSubmit} invalidTokens={invalidTokens} />
+        <div className="scale-selector" role="group" aria-label="Scale">
+          {SCALES.map(({ id, label, enabled }) => (
+            <button
+              key={id}
+              type="button"
+              className="scale-button"
+              aria-pressed={scale === id}
+              disabled={!enabled}
+              title={enabled ? undefined : 'Coming soon'}
+              onClick={() => setScale(id)}
+            >
+              {label}
+              {!enabled && <span className="scale-soon"> (coming soon)</span>}
+            </button>
+          ))}
+        </div>
+        <InputPanel onSubmit={setInput} invalidTokens={invalidTokens} />
         <MelodicDisplay positions={positions} />
       </main>
 

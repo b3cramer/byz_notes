@@ -68,7 +68,7 @@ export const InputPanel = ({ onSubmit, invalidTokens }: InputPanelProps) => {
             autoComplete="off"
           />
           <div className="input-help">
-            Low: z=Low Dhi, x=Low Ke, c=Low Zo | Main: a=Ni, s=Pa, d=Vou, f=Ga, q=Dhi, w=Ke, e=Zo, r=Ni`, t=Pa` | Add "2" after letter for klasma (e.g., a2) | Max 15
+            Low: z=Low Dhi, x=Low Ke, c=Low Zo | Main: a=Ni, s=Pa, d=Vou, f=Ga, q=Dhi, w=Ke, e=Zo, r=Ni`, t=Pa` | Add "1" after letter for gorgon, "2" for klasma (e.g., a1, a2) | Max 15
           </div>
         </div>
       </form>

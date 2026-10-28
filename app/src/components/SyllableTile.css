@@ -24,9 +24,11 @@
 }
 
 /**
- * Klasma character displayed above the syllable name
+ * Klasma, gorgon, and Agem characters displayed above the syllable name
  */
-.syllable-tile .klasma {
+.syllable-tile .klasma,
+.syllable-tile .gorgon,
+.syllable-tile .agem {
   position: absolute;
   top: -50%;
   left: 50%;

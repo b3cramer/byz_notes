@@ -14,7 +14,16 @@ export interface Syllable {
   scaleIndex: number;
   /** Whether this syllable has a klasma (rhythm marker) */
   hasKlasma?: boolean;
+  /** Whether this syllable has a gorgon (rhythm marker) */
+  hasGorgon?: boolean;
+  /** Whether this syllable has an Agem (enharmonic fthora, Zo-flat) */
+  hasAgem?: boolean;
 }
+
+/**
+ * Scales (genera) selectable in the app
+ */
+export type Scale = 'diatonic' | 'soft-chromatic' | 'hard-chromatic' | 'enharmonic';
 
 /**
  * Represents a syllable instance in a melodic sequence with position information
@@ -96,3 +105,15 @@ export const SCALE_ORDER = ['low dhi', 'low ke', 'low zo', 'ni', 'pa', 'bou', 'g
  * Neanes font maps this to U+E0D0 in the Private Use Area
  */
 export const KLASMA_CHAR = '\uE0D0';
+
+/**
+ * Gorgon character - Byzantine rhythm marker
+ * Neanes font maps this to U+E0F0 (gorgonAbove)
+ */
+export const GORGON_CHAR = '\uE0F0';
+
+/**
+ * Agem character - enharmonic fthora marking a permanent Zo-flat
+ * Neanes font maps this to U+E19C (fthoraEnharmonicAbove)
+ */
+export const AGEM_CHAR = '\uE19C';

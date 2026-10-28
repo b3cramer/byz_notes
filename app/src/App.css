@@ -37,6 +37,46 @@
   flex-direction: column;
 }
 
+.scale-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.scale-button {
+  padding: 8px 16px;
+  border: 2px solid #2c3e50;
+  border-radius: 6px;
+  background-color: white;
+  color: #2c3e50;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.scale-button[aria-pressed='true'] {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.scale-button:hover:not(:disabled):not([aria-pressed='true']) {
+  background-color: #ecf0f1;
+}
+
+.scale-button:disabled {
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.scale-soon {
+  font-weight: normal;
+  font-size: 12px;
+}
+
 .app-footer {
   margin-top: 40px;
   padding-top: 20px;

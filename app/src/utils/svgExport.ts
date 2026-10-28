@@ -3,7 +3,7 @@
  */
 
 import type { SyllablePosition } from '../types/syllable';
-import { KLASMA_CHAR } from '../types/syllable';
+import { AGEM_CHAR, GORGON_CHAR, KLASMA_CHAR } from '../types/syllable';
 
 /**
  * Export the melodic display to an SVG file
@@ -25,7 +25,11 @@ export const exportToSVG = (
   }
 
   // Calculate SVG dimensions based on actual tile positions
-  const padding = { left: 50, right: 50, top: 80, bottom: 40 }; // Extra top padding for Klasma
+  // Extra top padding for Klasma, and more when an Agem is stacked above a Klasma or Gorgon
+  const hasStackedMarks = positions.some(
+    (p) => p.syllable.hasAgem && (p.syllable.hasKlasma || p.syllable.hasGorgon)
+  );
+  const padding = { left: 50, right: 50, top: hasStackedMarks ? 80 + tileSize * 0.5 : 80, bottom: 40 };
   const minX = Math.min(...positions.map(p => p.x));
   const maxX = Math.max(...positions.map(p => p.x));
   const minY = Math.min(...positions.map(p => p.y));
@@ -116,6 +120,39 @@ export const exportToSVG = (
       klasmaText.setAttribute('class', 'neanes-font');
       klasmaText.textContent = KLASMA_CHAR;
       tileGroup.appendChild(klasmaText);
+    }
+
+    // Gorgon character if present, in the same spot as the klasma
+    if (syllable.hasGorgon) {
+      const gorgonFontSize = Math.round(tileSize * 0.8);
+      const gorgonText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      gorgonText.setAttribute('x', (tileX + tileSize / 2).toString());
+      gorgonText.setAttribute('y', (tileY - tileSize * 0.5 + gorgonFontSize * 0.5).toString());
+      gorgonText.setAttribute('text-anchor', 'middle');
+      gorgonText.setAttribute('dominant-baseline', 'middle');
+      gorgonText.setAttribute('font-size', `${gorgonFontSize}px`);
+      gorgonText.setAttribute('font-weight', 'normal');
+      gorgonText.setAttribute('fill', '#000');
+      gorgonText.setAttribute('class', 'neanes-font');
+      gorgonText.textContent = GORGON_CHAR;
+      tileGroup.appendChild(gorgonText);
+    }
+
+    // Agem character if present, stacked above a klasma or gorgon (matches the CSS)
+    if (syllable.hasAgem) {
+      const agemFontSize = Math.round(tileSize * 0.8);
+      const agemTop = syllable.hasKlasma || syllable.hasGorgon ? tileSize : tileSize * 0.5;
+      const agemText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      agemText.setAttribute('x', (tileX + tileSize / 2).toString());
+      agemText.setAttribute('y', (tileY - agemTop + agemFontSize * 0.5).toString());
+      agemText.setAttribute('text-anchor', 'middle');
+      agemText.setAttribute('dominant-baseline', 'middle');
+      agemText.setAttribute('font-size', `${agemFontSize}px`);
+      agemText.setAttribute('font-weight', 'normal');
+      agemText.setAttribute('fill', '#000');
+      agemText.setAttribute('class', 'neanes-font');
+      agemText.textContent = AGEM_CHAR;
+      tileGroup.appendChild(agemText);
     }
 
     svg.appendChild(tileGroup);
